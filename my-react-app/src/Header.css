@@ -25,8 +25,8 @@
 }
 
 .lang-btn {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 20px;
+  padding: 12px 22px;
+  font-size: 16px;
+  border-radius: 25px;
   cursor: pointer;
 }

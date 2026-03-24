@@ -25,7 +25,45 @@ i18n.use(initReactI18next).init({
           tagline: "Musical Entertainment for Happy Marriages.",
           copyright: "© 2026 NoteMyWords. All rights reserved.",
           concerns: "Have any Concerns?",
-          contactUs: "Contact Us"
+          contactUs: "Contact Us",
+          brand: "NoteMyWords"
+        },
+        singers: {
+            ian: {
+                name: "Ian Chan",
+                location: "Hong Kong",
+                experience: "5 years",
+                bio: "Ian Chan is a versatile singer known for pop, jazz, and R&B performances."
+            },
+            sabrina: {
+                name: "Sabrina Carpenter",
+                location: "Los Angeles",
+                experience: "6 years",
+                bio: "Sabrina Carpenter is a pop and R&B singer."
+            },
+            shiga: {
+                name: "Shiga Lin",
+                location: "Hong Kong",
+                experience: "7 years",
+                bio: "Shiga Lin is known for elegant stage presence."
+            },
+            joe: {
+                name: "Joe Jonas",
+                location: "New York",
+                experience: "8 years",
+                bio: "Joe Jonas is an experienced performer."
+            },
+            teddy: {
+                name: "Teddy Fan",
+                location: "Hong Kong",
+                experience: "4 years",
+                bio: "Teddy Fan is a pop singer."
+            }
+        },
+        languages: {
+            cantonese: "Cantonese",
+            english: "English",
+            mandarin: "Mandarin"
         },
         browse: {
           filter: "Filter",
@@ -35,11 +73,14 @@ i18n.use(initReactI18next).init({
           weekends: "Weekends",
           price: "Price",
           musicType: "Type of Music",
-          searchPlaceholder: "Enter singer name",
+          searchPlaceholder: "Enter singer name (Case Sensitive)",
           available: "Available",
           learnMore: "Learn More",
           bookNow: "Book Now",
-          noResults: "No singers match your filters."
+          noResults: "No singers match your filters.",
+          rnb: "R&B",
+          jazz: "Jazz",
+          pop: "Pop"
         },
         detail: {
           notFound: "Singer not found.",
@@ -55,6 +96,7 @@ i18n.use(initReactI18next).init({
           perHour: "/hour"
         },
         booking: {
+          formTitle: "Booking Form",
           notFound: "Singer not found.",
           backToBrowse: "Back to Browse",
           pickDateTime: "Pick a Date and Time",
@@ -103,7 +145,7 @@ i18n.use(initReactI18next).init({
           language: "EN"
         },
         home: {
-          headline: "預約歌手，讓你的婚禮更精彩！",
+          headline: "預約歌手！",
           bookNow: "立即預約"
         },
         contact: {
@@ -111,14 +153,53 @@ i18n.use(initReactI18next).init({
           subtitle: "歡迎留下你的問題或意見",
           name: "姓名",
           email: "電郵",
-          comments: "意見／問題",
+          comments: "意見/問題",
           submit: "提交"
         },
         footer: {
           tagline: "為幸福婚禮帶來音樂演出。",
-          copyright: "© 2026 NoteMyWords. 版權所有。",
+          copyright: "© 2026 樂語之聲. 版權所有。",
           concerns: "有任何疑問嗎？",
-          contactUs: "聯絡我們"
+          contactUs: "聯絡我們",
+          brand: "樂語之聲"
+        },
+        singers: {
+    
+            ian: {
+                name: "陳卓賢",
+                location: "香港",
+                experience: "5年",
+                bio: "陳卓賢是一位多才多藝的歌手，擅長流行、爵士和藍調。"
+            },
+            sabrina: {
+                name: "莎賓娜·卡本特",
+                location: "洛杉磯",
+                experience: "6年",
+                bio: "莎賓娜·卡本特是一位流行及藍調歌手。"
+            },
+            shiga: {
+                name: "連詩雅",
+                location: "香港",
+                experience: "7年",
+                bio: "連詩雅以優雅的舞台魅力而聞名。"
+            },
+            joe: {
+                name: "喬·喬納斯",
+                location: "紐約",
+                experience: "8年",
+                bio: "喬·喬納斯是一位經驗豐富的表演者。"
+            },
+            teddy: {
+                name: "范浩賢",
+                location: "香港",
+                experience: "4年",
+                bio: "范浩賢是一位流行歌手。"
+            }
+        },
+            languages: {
+            cantonese: "廣東話",
+            english: "英文",
+            mandarin: "普通話"
         },
         browse: {
           filter: "篩選",
@@ -132,7 +213,11 @@ i18n.use(initReactI18next).init({
           available: "可於",
           learnMore: "了解更多",
           bookNow: "立即預約",
-          noResults: "沒有符合篩選條件的歌手。"
+          noResults: "沒有符合篩選條件的歌手。",
+          rnb: "藍調",
+          jazz: "爵士",
+          pop: "流行",
+          
         },
         detail: {
           notFound: "找不到歌手。",
@@ -148,6 +233,7 @@ i18n.use(initReactI18next).init({
           perHour: "/小時"
         },
         booking: {
+          formTitle: "預訂表格",
           notFound: "找不到歌手。",
           backToBrowse: "返回歌手列表",
           pickDateTime: "選擇日期和時間",

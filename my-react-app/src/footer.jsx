@@ -7,7 +7,9 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-left">
-        <h2 className="footer-brand">NoteMyWords</h2>
+        <h2 className="footer-brand">
+            {t("footer.brand")}
+        </h2>
 
         <p className="footer-tagline">
           {t("footer.tagline")}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { singersData } from "./BrowseSingers";
+import { useTranslation } from "react-i18next";
 import "./Contact.css";
 
 function getTodayString() {
@@ -15,13 +16,13 @@ function isDateAvailable(dateString, availability) {
   if (!dateString) return false;
 
   const chosenDate = new Date(dateString + "T00:00:00");
-  const day = chosenDate.getDay(); // 0 Sunday, 6 Saturday
+  const day = chosenDate.getDay();
 
   const isWeekend = day === 0 || day === 6;
   const isWeekday = day >= 1 && day <= 5;
 
-  const hasWeekdays = availability.includes("Weekdays");
-  const hasWeekends = availability.includes("Weekends");
+  const hasWeekdays = availability.includes("browse.weekdays");
+  const hasWeekends = availability.includes("browse.weekends");
 
   if (hasWeekdays && hasWeekends) return true;
   if (hasWeekdays && isWeekday) return true;
@@ -53,6 +54,8 @@ function isFutureExpiry(expiryValue) {
 
 export default function Booking() {
   const { id } = useParams();
+  const { t } = useTranslation();
+
   const singer = singersData.find((s) => s.id === Number(id));
 
   const [formData, setFormData] = useState({
@@ -73,10 +76,10 @@ export default function Booking() {
   if (!singer) {
     return (
       <div className="contact-page">
-        <h2>Singer not found.</h2>
+        <h2>{t("booking.notFound")}</h2>
         <div className="booking-page-actions">
           <Link to="/browse" className="detail-back-btn">
-            Back to Browse
+            {t("booking.backToBrowse")}
           </Link>
         </div>
       </div>
@@ -94,17 +97,21 @@ export default function Booking() {
     if (name === "eventDate") {
       if (value && !isDateAvailable(value, singer.availability)) {
         if (
-          singer.availability.includes("Weekdays") &&
-          !singer.availability.includes("Weekends")
+          singer.availability.includes("browse.weekdays") &&
+          !singer.availability.includes("browse.weekends")
         ) {
-          setErrorMessage(`${singer.name} is only available on weekdays.`);
+          setErrorMessage(
+            t("booking.weekdaysOnly", { name: t(singer.nameKey) })
+          );
         } else if (
-          singer.availability.includes("Weekends") &&
-          !singer.availability.includes("Weekdays")
+          singer.availability.includes("browse.weekends") &&
+          !singer.availability.includes("browse.weekdays")
         ) {
-          setErrorMessage(`${singer.name} is only available on weekends.`);
+          setErrorMessage(
+            t("booking.weekendsOnly", { name: t(singer.nameKey) })
+          );
         } else {
-          setErrorMessage("");
+          setErrorMessage(t("booking.errorNotAvailable"));
         }
       } else {
         setErrorMessage("");
@@ -116,51 +123,53 @@ export default function Booking() {
     e.preventDefault();
 
     if (!formData.eventDate) {
-      setErrorMessage("Please choose an event date.");
+      setErrorMessage(t("booking.errorChooseDate"));
       return;
     }
 
     if (!isDateAvailable(formData.eventDate, singer.availability)) {
       if (
-        singer.availability.includes("Weekdays") &&
-        !singer.availability.includes("Weekends")
+        singer.availability.includes("browse.weekdays") &&
+        !singer.availability.includes("browse.weekends")
       ) {
-        setErrorMessage(`${singer.name} is only available on weekdays.`);
+        setErrorMessage(
+          t("booking.weekdaysOnly", { name: t(singer.nameKey) })
+        );
       } else if (
-        singer.availability.includes("Weekends") &&
-        !singer.availability.includes("Weekdays")
+        singer.availability.includes("browse.weekends") &&
+        !singer.availability.includes("browse.weekdays")
       ) {
-        setErrorMessage(`${singer.name} is only available on weekends.`);
+        setErrorMessage(
+          t("booking.weekendsOnly", { name: t(singer.nameKey) })
+        );
       } else {
-        setErrorMessage("The selected date is not available.");
+        setErrorMessage(t("booking.errorNotAvailable"));
       }
       return;
     }
 
     if (!/^\d{10}$/.test(formData.phone)) {
-      setErrorMessage("Phone number must be exactly 10 digits with no spaces.");
+      setErrorMessage(t("booking.errorPhone"));
       return;
     }
 
     if (!/^\d{16}$/.test(formData.cardNumber)) {
-      setErrorMessage("Card number must be exactly 16 digits.");
+      setErrorMessage(t("booking.errorCard"));
       return;
     }
 
     if (!/^\d{3}$/.test(formData.cvc)) {
-      setErrorMessage("CVV must be exactly 3 digits.");
+      setErrorMessage(t("booking.errorCvc"));
       return;
     }
 
     if (!isFutureExpiry(formData.expiryDate)) {
-      setErrorMessage(
-        "Expiry date must be in MM/YY format and later than the current date."
-      );
+      setErrorMessage(t("booking.errorExpiry"));
       return;
     }
 
     if (!formData.eventTime) {
-      setErrorMessage("Please select a time slot.");
+      setErrorMessage(t("booking.errorTime"));
       return;
     }
 
@@ -176,10 +185,10 @@ export default function Booking() {
     <div className="contact-page booking-page">
       <div className="booking-wrapper">
         <div className="booking-top-card">
-          <h1>Pick a Date and Time</h1>
+          <h1>{t("booking.pickDateTime")}</h1>
 
           <label>
-            Select a Date:
+            {t("booking.selectDate")}
             <input
               type="date"
               name="eventDate"
@@ -191,27 +200,27 @@ export default function Booking() {
           </label>
 
           <label>
-            Select a Time:
+            {t("booking.selectTime")}
             <select
               name="eventTime"
               value={formData.eventTime}
               onChange={handleChange}
               required
             >
-              <option value="">Select a time slot</option>
-              <option value="1:00 PM - 5:00 PM">1:00 PM - 5:00 PM</option>
-              <option value="6:00 PM - 10:00 PM">6:00 PM - 10:00 PM</option>
+              <option value="">{t("booking.selectTimeSlot")}</option>
+              <option value="1:00 PM - 5:00 PM">{t("booking.time1")}</option>
+              <option value="6:00 PM - 10:00 PM">{t("booking.time2")}</option>
             </select>
           </label>
         </div>
 
         <form className="booking-main-card" onSubmit={handleSubmit}>
-          <h1>Booking Form</h1>
+          <h1>{t("booking.formTitle")}</h1>
 
-          <h2>Your Information</h2>
+          <h2>{t("booking.yourInfo")}</h2>
 
           <label>
-            First Name:
+            {t("booking.firstName")}
             <input
               type="text"
               name="firstName"
@@ -222,7 +231,7 @@ export default function Booking() {
           </label>
 
           <label>
-            Last Name:
+            {t("booking.lastName")}
             <input
               type="text"
               name="lastName"
@@ -233,7 +242,7 @@ export default function Booking() {
           </label>
 
           <label>
-            Phone Number (no space):
+            {t("booking.phone")}
             <input
               type="text"
               name="phone"
@@ -244,12 +253,12 @@ export default function Booking() {
             />
           </label>
 
-          <p className="booking-small-note">10-digit number only.</p>
+          <p className="booking-small-note">{t("booking.phoneNote")}</p>
 
-          <h2>Your Payment Information</h2>
+          <h2>{t("booking.paymentInfo")}</h2>
 
           <label>
-            Card Number (16 digits, no spaces):
+            {t("booking.cardNumber")}
             <input
               type="text"
               name="cardNumber"
@@ -261,7 +270,7 @@ export default function Booking() {
           </label>
 
           <label>
-            Expiry Date:
+            {t("booking.expiryDate")}
             <input
               type="text"
               name="expiryDate"
@@ -273,7 +282,7 @@ export default function Booking() {
           </label>
 
           <label>
-            CVV:
+            {t("booking.cvc")}
             <input
               type="text"
               name="cvc"
@@ -285,7 +294,7 @@ export default function Booking() {
           </label>
 
           <label>
-            Name on Card:
+            {t("booking.cardName")}
             <input
               type="text"
               name="cardName"
@@ -298,13 +307,13 @@ export default function Booking() {
           {errorMessage && <p className="booking-error">{errorMessage}</p>}
 
           <button type="submit" className="booking-confirm-btn">
-            Confirm Booking
+            {t("booking.confirmBooking")}
           </button>
         </form>
 
         <div className="booking-page-actions">
           <Link to="/browse" className="detail-back-btn">
-            Back to Browse
+            {t("booking.backToBrowse")}
           </Link>
         </div>
       </div>
@@ -312,7 +321,7 @@ export default function Booking() {
       {showModal && (
         <div className="booking-modal-overlay">
           <div className="booking-modal">
-            <h2>Booking Confirmation</h2>
+            <h2>{t("booking.confirmation")}</h2>
 
             <p
               style={{
@@ -321,31 +330,36 @@ export default function Booking() {
                 marginBottom: "16px",
               }}
             >
-              You've booked successfully!
+              {t("booking.bookedSuccess")}
             </p>
 
             <p>
-              <strong>Singer:</strong> {singer.name}
+              <strong>{t("booking.singer")}</strong> {t(singer.nameKey)}
             </p>
             <p>
-              <strong>Name:</strong> {formData.firstName} {formData.lastName}
+              <strong>{t("booking.name")}</strong> {formData.firstName}{" "}
+              {formData.lastName}
             </p>
             <p>
-              <strong>Phone:</strong> {formData.phone}
+              <strong>{t("booking.phoneLabel")}</strong> {formData.phone}
             </p>
             <p>
-              <strong>Date:</strong> {formData.eventDate}
+              <strong>{t("booking.date")}</strong> {formData.eventDate}
             </p>
             <p>
-              <strong>Time:</strong> {formData.eventTime}
+              <strong>{t("booking.time")}</strong> {formData.eventTime}
             </p>
             <p>
-              <strong>Location:</strong> {singer.location}
+              <strong>{t("booking.location")}</strong> {t(singer.locationKey)}
             </p>
 
             <div className="booking-modal-actions">
-              <button type="button" className="detail-back-btn" onClick={closeModal}>
-                Close
+              <button
+                type="button"
+                className="detail-back-btn"
+                onClick={closeModal}
+              >
+                {t("booking.close")}
               </button>
             </div>
           </div>

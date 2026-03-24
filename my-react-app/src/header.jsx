@@ -12,7 +12,7 @@ export default function Header() {
           {t("nav.brand")}
         </Link>
 
-        <button onClick={() => i18n.changeLanguage(i18n.language === "en" ? "zh" : "en")}>
+        <button className="lang-btn" onClick={() => i18n.changeLanguage(i18n.language === "en" ? "zh" : "en")}>
           {t("nav.language")}
         </button>
       </header>

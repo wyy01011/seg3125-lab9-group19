@@ -26,21 +26,21 @@ export default function SingerDetail() {
       <div className="singer-detail-card">
         <img
           src={singer.image}
-          alt={singer.name}
+          alt={t(singer.nameKey)}
           className="singer-detail-image"
         />
 
         <div className="singer-detail-info">
-          <h1>{singer.name}</h1>
+          <p className="singerName">{t(singer.nameKey)}</p>
 
           <p>
             <strong>{t("detail.availability")}:</strong>{" "}
-            {singer.availability.join(", ")}
+            {singer.availability.map((item) => t(item)).join(", ")}
           </p>
 
           <p>
             <strong>{t("detail.genres")}:</strong>{" "}
-            {singer.genres.join(", ")}
+            {singer.genres.map((genre) => t(genre)).join(", ")}
           </p>
 
           <p>
@@ -49,21 +49,21 @@ export default function SingerDetail() {
           </p>
 
           <p>
-            <strong>{t("detail.location")}:</strong> {singer.location}
+            <strong>{t("detail.location")}:</strong> {t(singer.locationKey)}
           </p>
 
           <p>
             <strong>{t("detail.languages")}:</strong>{" "}
-            {singer.languages.join(", ")}
+            {singer.languages.map((lang) => t(lang)).join(", ")}
           </p>
 
           <p>
             <strong>{t("detail.experience")}:</strong>{" "}
-            {singer.experience}
+            {t(singer.experienceKey)}
           </p>
 
           <p>
-            <strong>{t("detail.bio")}:</strong> {singer.bio}
+            <strong>{t("detail.bio")}:</strong> {t(singer.bioKey)}
           </p>
 
           <div className="detail-actions">

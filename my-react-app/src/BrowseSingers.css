@@ -134,6 +134,7 @@ body {
   background-color: #d9d9d9;
   color: black;
   font-size: 1rem;
+  margin-bottom: 20px;
 }
 
 .card-grid {
@@ -185,6 +186,7 @@ body {
   padding: 8px 16px;
   border-radius: 16px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .no-results {

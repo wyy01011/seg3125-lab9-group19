@@ -12,63 +12,63 @@ import teddyImg from "./assets/teddy.jpg";
 export const singersData = [
   {
     id: 1,
-    name: "Ian Chan",
+    nameKey: "singers.ian.name",
     image: ianImg,
-    availability: ["Weekdays"],
-    genres: ["Pop", "Jazz", "R&B"],
+    availability: ["browse.weekdays"],
+    genres: ["browse.pop", "browse.jazz", "browse.rnb"],
     price: 200,
-    location: "Hong Kong",
-    languages: ["Cantonese", "English"],
-    experience: "5 years",
-    bio: "Ian Chan is a versatile singer known for pop, jazz, and R&B performances."
+    locationKey: "singers.ian.location",
+    languages: ["languages.cantonese", "languages.english"],
+    experienceKey: "singers.ian.experience",
+    bioKey: "singers.ian.bio",
   },
   {
     id: 2,
-    name: "Sabrina Carpenter",
+    nameKey: "singers.sabrina.name",
     image: sabrinaImg,
-    availability: ["Weekends"],
-    genres: ["R&B", "Pop"],
+    availability: ["browse.weekends"],
+    genres: ["browse.rnb", "browse.pop"],
     price: 85,
-    location: "Los Angeles",
-    languages: ["English"],
-    experience: "6 years",
-    bio: "Sabrina Carpenter is a pop and R&B singer."
+    locationKey: "singers.sabrina.location",
+    languages: ["languages.english"],
+    experienceKey: "singers.sabrina.experience",
+    bioKey: "singers.sabrina.bio",
   },
   {
     id: 3,
-    name: "Shiga Lin",
+    nameKey: "singers.shiga.name",
     image: shigaImg,
-    availability: ["Weekdays", "Weekends"],
-    genres: ["Pop", "Jazz"],
+    availability: ["browse.weekdays", "browse.weekends"],
+    genres: ["browse.pop", "browse.jazz"],
     price: 95,
-    location: "Hong Kong",
-    languages: ["Cantonese", "Mandarin", "English"],
-    experience: "7 years",
-    bio: "Shiga Lin is known for elegant stage presence."
+    locationKey: "singers.shiga.location",
+    languages: ["languages.cantonese", "languages.mandarin", "languages.english"],
+    experienceKey: "singers.shiga.experience",
+    bioKey: "singers.shiga.bio",
   },
   {
     id: 4,
-    name: "Joe Jonas",
+    nameKey: "singers.joe.name",
     image: joeImg,
-    availability: ["Weekdays"],
-    genres: ["Jazz", "R&B"],
+    availability: ["browse.weekdays"],
+    genres: ["browse.jazz", "browse.rnb"],
     price: 75,
-    location: "New York",
-    languages: ["English"],
-    experience: "8 years",
-    bio: "Joe Jonas is an experienced performer."
+    locationKey: "singers.joe.location",
+    languages: ["languages.english"],
+    experienceKey: "singers.joe.experience",
+    bioKey: "singers.joe.bio",
   },
   {
     id: 5,
-    name: "Teddy Fan",
+    nameKey: "singers.teddy.name",
     image: teddyImg,
-    availability: ["Weekdays", "Weekends"],
-    genres: ["Pop"],
+    availability: ["browse.weekdays", "browse.weekends"],
+    genres: ["browse.pop"],
     price: 80,
-    location: "Hong Kong",
-    languages: ["Cantonese", "English"],
-    experience: "4 years",
-    bio: "Teddy Fan is a pop singer."
+    locationKey: "singers.teddy.location",
+    languages: ["languages.cantonese", "languages.english"],
+    experienceKey: "singers.teddy.experience",
+    bioKey: "singers.teddy.bio",
   },
 ];
 
@@ -96,18 +96,18 @@ export default function BrowseSingers() {
   const filteredSingers = singersData.filter((singer) => {
     const lowerSearch = searchTerm.toLowerCase();
 
-    const matchesSearch = singer.name.toLowerCase().includes(lowerSearch);
+    const matchesSearch = t(singer.nameKey).includes(lowerSearch);
 
     const matchesAvailability =
       (!weekdaysChecked && !weekendsChecked) ||
-      (weekdaysChecked && singer.availability.includes("Weekdays")) ||
-      (weekendsChecked && singer.availability.includes("Weekends"));
+      (weekdaysChecked && singer.availability.includes("browse.weekdays")) ||
+      (weekendsChecked && singer.availability.includes("browse.weekends"));
 
     const matchesGenre =
       (!rnbChecked && !jazzChecked && !popChecked) ||
-      (rnbChecked && singer.genres.includes("R&B")) ||
-      (jazzChecked && singer.genres.includes("Jazz")) ||
-      (popChecked && singer.genres.includes("Pop"));
+      (rnbChecked && singer.genres.includes("browse.rnb")) ||
+      (jazzChecked && singer.genres.includes("browse.jazz")) ||
+      (popChecked && singer.genres.includes("browse.pop"));
 
     const matchesPrice = singer.price <= maxPrice;
 
@@ -171,7 +171,7 @@ export default function BrowseSingers() {
                 checked={rnbChecked}
                 onChange={() => setRnbChecked(!rnbChecked)}
               />
-              R&B
+              {t("browse.rnb")}
             </label>
 
             <label>
@@ -180,7 +180,7 @@ export default function BrowseSingers() {
                 checked={jazzChecked}
                 onChange={() => setJazzChecked(!jazzChecked)}
               />
-              Jazz
+              {t("browse.jazz")}
             </label>
 
             <label>
@@ -189,7 +189,7 @@ export default function BrowseSingers() {
                 checked={popChecked}
                 onChange={() => setPopChecked(!popChecked)}
               />
-              Pop
+              {t("browse.pop")}
             </label>
           </div>
         </aside>
@@ -200,6 +200,7 @@ export default function BrowseSingers() {
           <input
             type="text"
             placeholder={t("browse.searchPlaceholder")}
+            className="search-bar"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -208,22 +209,27 @@ export default function BrowseSingers() {
             {filteredSingers.length > 0 ? (
               filteredSingers.map((singer) => (
                 <div className="singer-card" key={singer.id}>
-                  <img src={singer.image} alt={singer.name} />
+                  <img src={singer.image} alt={singer.name} className="singer-image-browse"/>
 
-                  <h3>{singer.name}</h3>
+                  <h4>{t(singer.nameKey)}</h4>
 
-                  <p>
-                    {t("browse.available")} {singer.availability.join(", ").toLowerCase()}
-                  </p>
+                  <ul>
+                    <li>
+                      {t("browse.available")}{" "}
+                      {singer.availability.map((item) => t(item)).join(", ")}
+                    </li>
 
-                  <p>{singer.genres.join(", ")}</p>
-                  <p>${singer.price}/hour</p>
+                    <li>{singer.genres.map((genre) => t(genre)).join(", ")}</li>
 
-                  <Link to={`/singer/${singer.id}`}>
+                    <li>${singer.price}{t("detail.perHour")}</li>
+                  </ul>
+                                    
+
+                  <Link to={`/singer/${singer.id}`} className="learn-btn">
                     {t("browse.learnMore")}
                   </Link>
 
-                  <Link to={`/booking/${singer.id}`}>
+                  <Link to={`/booking/${singer.id}`} className="learn-btn">
                     {t("browse.bookNow")}
                   </Link>
                 </div>
