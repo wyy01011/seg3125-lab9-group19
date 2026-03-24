@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./BrowseSingers.css";
 
 import ianImg from "./assets/ian.jpg";
@@ -10,68 +11,70 @@ import teddyImg from "./assets/teddy.jpg";
 
 export const singersData = [
   {
-  id: 1,
-  name: "Ian Chan",
-  image: ianImg,
-  availability: ["Weekdays"],
-  genres: ["Pop", "Jazz", "R&B"],
-  price: 200,
-  location: "Hong Kong",
-  languages: ["Cantonese", "English"],
-  experience: "5 years",
-  bio: "Ian Chan is a versatile singer known for pop, jazz, and R&B performances. He is suitable for live stages, school events, and formal performances."
+    id: 1,
+    name: "Ian Chan",
+    image: ianImg,
+    availability: ["Weekdays"],
+    genres: ["Pop", "Jazz", "R&B"],
+    price: 200,
+    location: "Hong Kong",
+    languages: ["Cantonese", "English"],
+    experience: "5 years",
+    bio: "Ian Chan is a versatile singer known for pop, jazz, and R&B performances."
   },
   {
-  id: 2,
-  name: "Sabrina Carpenter",
-  image: sabrinaImg,
-  availability: ["Weekends"],
-  genres: ["R&B", "Pop"],
-  price: 85,
-  location: "Los Angeles",
-  languages: ["English"],
-  experience: "6 years",
-  bio: "Sabrina Carpenter is a pop and R&B singer who performs well in energetic and youth-oriented events."
+    id: 2,
+    name: "Sabrina Carpenter",
+    image: sabrinaImg,
+    availability: ["Weekends"],
+    genres: ["R&B", "Pop"],
+    price: 85,
+    location: "Los Angeles",
+    languages: ["English"],
+    experience: "6 years",
+    bio: "Sabrina Carpenter is a pop and R&B singer."
   },
   {
-  id: 3,
-  name: "Shiga Lin",
-  image: shigaImg,
-  availability: ["Weekdays", "Weekends"],
-  genres: ["Pop", "Jazz"],
-  price: 95,
-  location: "Hong Kong",
-  languages: ["Cantonese", "Mandarin", "English"],
-  experience: "7 years",
-  bio: "Shiga Lin is known for elegant stage presence and strong vocal delivery, suitable for both casual and formal event settings."
+    id: 3,
+    name: "Shiga Lin",
+    image: shigaImg,
+    availability: ["Weekdays", "Weekends"],
+    genres: ["Pop", "Jazz"],
+    price: 95,
+    location: "Hong Kong",
+    languages: ["Cantonese", "Mandarin", "English"],
+    experience: "7 years",
+    bio: "Shiga Lin is known for elegant stage presence."
   },
   {
-  id: 4,
-  name: "Joe Jonas",
-  image: joeImg,
-  availability: ["Weekdays"],
-  genres: ["Jazz", "R&B"],
-  price: 75,
-  location: "New York",
-  languages: ["English"],
-  experience: "8 years",
-  bio: "Joe Jonas is an experienced performer with a strong background in live shows and audience interaction."
+    id: 4,
+    name: "Joe Jonas",
+    image: joeImg,
+    availability: ["Weekdays"],
+    genres: ["Jazz", "R&B"],
+    price: 75,
+    location: "New York",
+    languages: ["English"],
+    experience: "8 years",
+    bio: "Joe Jonas is an experienced performer."
   },
   {
-  id: 5,
-  name: "Teddy Fan",
-  image: teddyImg,
-  availability: ["Weekdays", "Weekends"],
-  genres: ["Pop"],
-  price: 80,
-  location: "Hong Kong",
-  languages: ["Cantonese", "English"],
-  experience: "4 years",
-  bio: "Teddy Fan is a pop singer suitable for private parties, school events, and community performances."
+    id: 5,
+    name: "Teddy Fan",
+    image: teddyImg,
+    availability: ["Weekdays", "Weekends"],
+    genres: ["Pop"],
+    price: 80,
+    location: "Hong Kong",
+    languages: ["Cantonese", "English"],
+    experience: "4 years",
+    bio: "Teddy Fan is a pop singer."
   },
 ];
 
 export default function BrowseSingers() {
+  const { t } = useTranslation();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [weekdaysChecked, setWeekdaysChecked] = useState(false);
   const [weekendsChecked, setWeekendsChecked] = useState(false);
@@ -90,10 +93,10 @@ export default function BrowseSingers() {
     setMaxPrice(200);
   }
 
-  const filteredSingers = singersData.filter(function (singer) {
+  const filteredSingers = singersData.filter((singer) => {
     const lowerSearch = searchTerm.toLowerCase();
 
-    const matchesSearch = singer.name.toLowerCase().includes(lowerSearch)
+    const matchesSearch = singer.name.toLowerCase().includes(lowerSearch);
 
     const matchesAvailability =
       (!weekdaysChecked && !weekendsChecked) ||
@@ -108,25 +111,24 @@ export default function BrowseSingers() {
 
     const matchesPrice = singer.price <= maxPrice;
 
-    return (
-      matchesSearch && matchesAvailability && matchesGenre && matchesPrice
-    );
+    return matchesSearch && matchesAvailability && matchesGenre && matchesPrice;
   });
 
   return (
     <div className="browse-page">
-
       <div className="browse-content">
+
+        {/* FILTER PANEL */}
         <aside className="filter-panel">
-        <div className="filter-header">
-          <h2>Filter</h2>
-          <div className="card-actions">
-            <button className="clear-btn" onClick={clearFilters}>Remove all</button>
-        </div>
-        </div>
-          
+          <div className="filter-header">
+            <h2>{t("browse.filter")}</h2>
+            <button className="clear-btn" onClick={clearFilters}>
+              {t("browse.removeAll")}
+            </button>
+          </div>
+
           <div className="filter-group">
-            <h3>Availability</h3>
+            <h3>{t("browse.availability")}</h3>
 
             <label>
               <input
@@ -134,7 +136,7 @@ export default function BrowseSingers() {
                 checked={weekdaysChecked}
                 onChange={() => setWeekdaysChecked(!weekdaysChecked)}
               />
-              Weekdays
+              {t("browse.weekdays")}
             </label>
 
             <label>
@@ -143,25 +145,25 @@ export default function BrowseSingers() {
                 checked={weekendsChecked}
                 onChange={() => setWeekendsChecked(!weekendsChecked)}
               />
-              Weekends
+              {t("browse.weekends")}
             </label>
           </div>
 
           <div className="filter-group">
-            <h3>Price</h3>
+            <h3>{t("browse.price")}</h3>
             <p>0 - {maxPrice}</p>
+
             <input
               type="range"
               min="0"
               max="200"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="price-slider"
             />
           </div>
 
           <div className="filter-group">
-            <h3>Type of Music</h3>
+            <h3>{t("browse.musicType")}</h3>
 
             <label>
               <input
@@ -192,59 +194,46 @@ export default function BrowseSingers() {
           </div>
         </aside>
 
+        {/* MAIN */}
         <main className="main-section">
-          <div className="search-bar-container">
-            <input
-              type="text"
-              placeholder="Enter singer name"
-              className="search-bar"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+
+          <input
+            type="text"
+            placeholder={t("browse.searchPlaceholder")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
 
           <div className="card-grid">
             {filteredSingers.length > 0 ? (
-              filteredSingers.map(function (singer) {
-                return (
-                  <div className="singer-card" key={singer.id}>
-                    <img
-                      src={singer.image}
-                      alt={singer.name}
-                      className="singer-image-browse"
-                    />
+              filteredSingers.map((singer) => (
+                <div className="singer-card" key={singer.id}>
+                  <img src={singer.image} alt={singer.name} />
 
-                    <div className="singer-info">
-                      <h4>{singer.name}</h4>
-                      <ul>
-                        <li>Available {singer.availability.join(", ").toLowerCase()}</li>
-                        <li>{singer.genres.join(", ")}</li>
-                        <li>${singer.price}/hour</li>
-                      </ul>
-                    </div>
+                  <h3>{singer.name}</h3>
 
-                    <div className="card-actions">
-                      <Link to={`/singer/${singer.id}`} className="learn-btn">
-                        Learn More
-                      </Link>
+                  <p>
+                    {t("browse.available")} {singer.availability.join(", ").toLowerCase()}
+                  </p>
 
-                      <Link to={`/booking/${singer.id}`} className="learn-btn">
-                        Book Now
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })
+                  <p>{singer.genres.join(", ")}</p>
+                  <p>${singer.price}/hour</p>
+
+                  <Link to={`/singer/${singer.id}`}>
+                    {t("browse.learnMore")}
+                  </Link>
+
+                  <Link to={`/booking/${singer.id}`}>
+                    {t("browse.bookNow")}
+                  </Link>
+                </div>
+              ))
             ) : (
-
-              // If no singers match the filters, show a message
-              <p className="no-results">No singers match your filters.</p>
+              <p>{t("browse.noResults")}</p>
             )}
           </div>
         </main>
       </div>
-
-      
     </div>
   );
-}  
+}

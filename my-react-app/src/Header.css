@@ -24,22 +24,9 @@
   text-decoration: none;
 }
 
-.nav-book {
-  font-size: 18px;
-  font-weight: 600;
-  text-decoration: none;
-  color: black;
-
-  background: white;
-  padding: 10px 22px;
-  border-radius: 30px;
-
-  border: 2px solid #ffb6c1;
-  transition: 0.25s ease;
-}
-
-.nav-book:hover {
-  background: #ffb6c1;
-  color: white;
-  border-color: #ffb6c1;
+.lang-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
 }

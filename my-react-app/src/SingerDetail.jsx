@@ -1,18 +1,21 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { singersData } from "./BrowseSingers";
 import "./SingerDetail.css";
 
 export default function SingerDetail() {
   const { id } = useParams();
+  const { t } = useTranslation();
   const singer = singersData.find((s) => s.id === Number(id));
 
   if (!singer) {
     return (
       <div className="singer-detail-page">
-        <h2>Singer not found.</h2>
+        <h2>{t("detail.notFound")}</h2>
+
         <Link to="/browse" className="detail-back-btn">
-          Back to Browse
+          {t("detail.backToBrowse")}
         </Link>
       </div>
     );
@@ -31,40 +34,45 @@ export default function SingerDetail() {
           <h1>{singer.name}</h1>
 
           <p>
-            <strong>Availability:</strong> {singer.availability.join(", ")}
+            <strong>{t("detail.availability")}:</strong>{" "}
+            {singer.availability.join(", ")}
           </p>
 
           <p>
-            <strong>Genres:</strong> {singer.genres.join(", ")}
+            <strong>{t("detail.genres")}:</strong>{" "}
+            {singer.genres.join(", ")}
           </p>
 
           <p>
-            <strong>Price:</strong> ${singer.price}/hour
+            <strong>{t("detail.price")}:</strong> ${singer.price}
+            {t("detail.perHour")}
           </p>
 
           <p>
-            <strong>Location:</strong> {singer.location}
+            <strong>{t("detail.location")}:</strong> {singer.location}
           </p>
 
           <p>
-            <strong>Languages:</strong> {singer.languages.join(", ")}
+            <strong>{t("detail.languages")}:</strong>{" "}
+            {singer.languages.join(", ")}
           </p>
 
           <p>
-            <strong>Experience:</strong> {singer.experience}
+            <strong>{t("detail.experience")}:</strong>{" "}
+            {singer.experience}
           </p>
 
           <p>
-            <strong>Bio:</strong> {singer.bio}
+            <strong>{t("detail.bio")}:</strong> {singer.bio}
           </p>
 
           <div className="detail-actions">
             <Link to="/browse" className="detail-back-btn">
-              Back to Browse
+              {t("detail.backToBrowse")}
             </Link>
 
             <Link to={`/booking/${singer.id}`} className="detail-book-btn">
-              Book Now
+              {t("detail.bookNow")}
             </Link>
           </div>
         </div>

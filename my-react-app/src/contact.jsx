@@ -1,26 +1,36 @@
-import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./Contact.css";
 
 export default function Contact() {
+  const { t } = useTranslation();
+
   return (
     <div className="contact-container">
 
-      {/* Contact Form Section */}
       <section className="contact-box">
-        <h2 className="contact-title">Contact Us</h2>
-        <p className="contact-subtitle">Leave us a comment or question</p>
+        <h2 className="contact-title">
+          {t("contact.title")}
+        </h2>
+
+        <p className="contact-subtitle">
+          {t("contact.subtitle")}
+        </p>
 
         <form className="contact-form">
-          <label>Name</label>
+
+          <label>{t("contact.name")}</label>
           <input type="text" className="contact-input" />
 
-          <label>Email</label>
+          <label>{t("contact.email")}</label>
           <input type="email" className="contact-input" />
 
-          <label>Comments/Questions</label>
+          <label>{t("contact.comments")}</label>
           <textarea className="contact-textarea" rows="5"></textarea>
 
-          <button type="submit" className="contact-submit">Submit</button>
+          <button type="submit" className="contact-submit">
+            {t("contact.submit")}
+          </button>
+
         </form>
       </section>
 
