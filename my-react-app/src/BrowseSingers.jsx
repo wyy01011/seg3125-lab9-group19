@@ -209,29 +209,29 @@ export default function BrowseSingers() {
             {filteredSingers.length > 0 ? (
               filteredSingers.map((singer) => (
                 <div className="singer-card" key={singer.id}>
-                  <img src={singer.image} alt={singer.name} className="singer-image-browse"/>
+                  <img src={singer.image} alt={t(singer.nameKey)} className="singer-image-browse" />
 
-                  <h4>{t(singer.nameKey)}</h4>
+                  <div className="singer-info">
+                    <h4>{t(singer.nameKey)}</h4>
+                    <ul>
+                      <li>
+                        {t("browse.available")}{" "}
+                        {singer.availability.map((item) => t(item)).join(", ")}
+                      </li>
+                      <li>{singer.genres.map((genre) => t(genre)).join(", ")}</li>
+                      <li>${singer.price}{t("detail.perHour")}</li>
+                    </ul>
+                  </div>
 
-                  <ul>
-                    <li>
-                      {t("browse.available")}{" "}
-                      {singer.availability.map((item) => t(item)).join(", ")}
-                    </li>
+                  <div className="card-actions">
+                    <Link to={`/singer/${singer.id}`} className="learn-btn">
+                      {t("browse.learnMore")}
+                    </Link>
 
-                    <li>{singer.genres.map((genre) => t(genre)).join(", ")}</li>
-
-                    <li>${singer.price}{t("detail.perHour")}</li>
-                  </ul>
-                                    
-
-                  <Link to={`/singer/${singer.id}`} className="learn-btn">
-                    {t("browse.learnMore")}
-                  </Link>
-
-                  <Link to={`/booking/${singer.id}`} className="learn-btn">
-                    {t("browse.bookNow")}
-                  </Link>
+                    <Link to={`/booking/${singer.id}`} className="learn-btn">
+                      {t("browse.bookNow")}
+                    </Link>
+                  </div>
                 </div>
               ))
             ) : (
