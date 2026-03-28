@@ -70,7 +70,17 @@ export default function Booking() {
     eventTime: "",
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({
+  eventDate: "",
+  eventTime: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  cardNumber: "",
+  expiryDate: "",
+  cvc: "",
+  cardName: "",
+  });
   const [showModal, setShowModal] = useState(false);
 
   if (!singer) {
@@ -86,96 +96,230 @@ export default function Booking() {
     );
   }
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (name === "eventDate") {
-      if (value && !isDateAvailable(value, singer.availability)) {
-        if (
-          singer.availability.includes("browse.weekdays") &&
-          !singer.availability.includes("browse.weekends")
-        ) {
-          setErrorMessage(
-            t("booking.weekdaysOnly", { name: t(singer.nameKey) })
-          );
-        } else if (
-          singer.availability.includes("browse.weekends") &&
-          !singer.availability.includes("browse.weekdays")
-        ) {
-          setErrorMessage(
-            t("booking.weekendsOnly", { name: t(singer.nameKey) })
-          );
-        } else {
-          setErrorMessage(t("booking.errorNotAvailable"));
-        }
-      } else {
-        setErrorMessage("");
-      }
+  function getRealtimeError(nextForm) {
+  if (
+    nextForm.eventDate &&
+    !isDateAvailable(nextForm.eventDate, singer.availability)
+  ) {
+    if (
+      singer.availability.includes("browse.weekdays") &&
+      !singer.availability.includes("browse.weekends")
+    ) {
+      return t("booking.weekdaysOnly", { name: t(singer.nameKey) });
     }
+
+    if (
+      singer.availability.includes("browse.weekends") &&
+      !singer.availability.includes("browse.weekdays")
+    ) {
+      return t("booking.weekendsOnly", { name: t(singer.nameKey) });
+    }
+
+    return t("booking.errorNotAvailable");
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  if (nextForm.phone && !/^\d{0,10}$/.test(nextForm.phone)) {
+    return t("booking.errorPhone");
+  }
 
-    if (!formData.eventDate) {
-      setErrorMessage(t("booking.errorChooseDate"));
-      return;
-    }
+  if (nextForm.cardNumber && !/^\d{0,16}$/.test(nextForm.cardNumber)) {
+    return t("booking.errorCard");
+  }
 
-    if (!isDateAvailable(formData.eventDate, singer.availability)) {
+  if (nextForm.cvc && !/^\d{0,3}$/.test(nextForm.cvc)) {
+    return t("booking.errorCvc");
+  }
+
+  if (
+    nextForm.expiryDate &&
+    !/^\d{0,2}(\/\d{0,2})?$/.test(nextForm.expiryDate)
+  ) {
+    return t("booking.errorExpiry");
+  }
+
+  if (
+    nextForm.expiryDate &&
+    nextForm.expiryDate.length === 5 &&
+    !isFutureExpiry(nextForm.expiryDate)
+  ) {
+    return t("booking.errorExpiry");
+  }
+
+  if (
+    nextForm.eventLanguage &&
+    !singer.languages.includes(nextForm.eventLanguage)
+  ) {
+    return t("booking.errorLanguage");
+  }
+
+  return "";
+}
+
+function getSingleFieldError(name, value, nextForm = formData) {
+  if (name === "eventDate") {
+    if (!value) return "";
+
+    if (!isDateAvailable(value, singer.availability)) {
       if (
         singer.availability.includes("browse.weekdays") &&
         !singer.availability.includes("browse.weekends")
       ) {
-        setErrorMessage(
-          t("booking.weekdaysOnly", { name: t(singer.nameKey) })
-        );
-      } else if (
+        return t("booking.weekdaysOnly", { name: t(singer.nameKey) });
+      }
+
+      if (
         singer.availability.includes("browse.weekends") &&
         !singer.availability.includes("browse.weekdays")
       ) {
-        setErrorMessage(
-          t("booking.weekendsOnly", { name: t(singer.nameKey) })
-        );
-      } else {
-        setErrorMessage(t("booking.errorNotAvailable"));
+        return t("booking.weekendsOnly", { name: t(singer.nameKey) });
       }
-      return;
+
+      return t("booking.errorNotAvailable");
     }
 
-    if (!/^\d{10}$/.test(formData.phone)) {
-      setErrorMessage(t("booking.errorPhone"));
-      return;
-    }
-
-    if (!/^\d{16}$/.test(formData.cardNumber)) {
-      setErrorMessage(t("booking.errorCard"));
-      return;
-    }
-
-    if (!/^\d{3}$/.test(formData.cvc)) {
-      setErrorMessage(t("booking.errorCvc"));
-      return;
-    }
-
-    if (!isFutureExpiry(formData.expiryDate)) {
-      setErrorMessage(t("booking.errorExpiry"));
-      return;
-    }
-
-    if (!formData.eventTime) {
-      setErrorMessage(t("booking.errorTime"));
-      return;
-    }
-
-    setErrorMessage("");
-    setShowModal(true);
+    return "";
   }
+
+  if (name === "eventTime") {
+    if (!value) return "";
+    return "";
+  }
+
+  if (name === "phone") {
+    if (!value) return "";
+    if (!/^\d{10}$/.test(value)) {
+      return t("booking.errorPhone");
+    }
+    return "";
+  }
+
+  if (name === "cardNumber") {
+    if (!value) return "";
+    if (!/^\d{16}$/.test(value)) {
+      return t("booking.errorCard");
+    }
+    return "";
+  }
+
+  if (name === "expiryDate") {
+    if (!value) return "";
+    if (!isFutureExpiry(value)) {
+      return t("booking.errorExpiry");
+    }
+    return "";
+  }
+
+  if (name === "cvc") {
+    if (!value) return "";
+    if (!/^\d{3}$/.test(value)) {
+      return t("booking.errorCvc");
+    }
+    return "";
+  }
+
+  return "";
+}
+
+  function handleChange(e) {
+  const { name, value } = e.target;
+
+  const nextForm = {
+    ...formData,
+    [name]: value,
+  };
+
+  setFormData(nextForm);
+
+  setFieldErrors((prev) => ({
+    ...prev,
+    [name]: getSingleFieldError(name, value, nextForm),
+  }));
+}
+
+function handleSubmit(e) {
+  e.preventDefault();
+
+  const nextErrors = {
+    eventDate: "",
+    eventTime: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    cardNumber: "",
+    expiryDate: "",
+    cvc: "",
+    cardName: "",
+  };
+
+  if (!formData.eventDate) {
+    nextErrors.eventDate = t("booking.errorChooseDate");
+  } else if (!isDateAvailable(formData.eventDate, singer.availability)) {
+    if (
+      singer.availability.includes("browse.weekdays") &&
+      !singer.availability.includes("browse.weekends")
+    ) {
+      nextErrors.eventDate = t("booking.weekdaysOnly", {
+        name: t(singer.nameKey),
+      });
+    } else if (
+      singer.availability.includes("browse.weekends") &&
+      !singer.availability.includes("browse.weekdays")
+    ) {
+      nextErrors.eventDate = t("booking.weekendsOnly", {
+        name: t(singer.nameKey),
+      });
+    } else {
+      nextErrors.eventDate = t("booking.errorNotAvailable");
+    }
+  }
+
+  if (!formData.eventTime) {
+    nextErrors.eventTime = t("booking.errorTime");
+  }
+
+  if (!formData.firstName) {
+    nextErrors.firstName = t("booking.required");
+  }
+
+  if (!formData.lastName) {
+    nextErrors.lastName = t("booking.required");
+  }
+
+  if (!formData.phone) {
+    nextErrors.phone = t("booking.required");
+  } else if (!/^\d{10}$/.test(formData.phone)) {
+    nextErrors.phone = t("booking.errorPhone");
+  }
+
+  if (!formData.cardNumber) {
+    nextErrors.cardNumber = t("booking.required");
+  } else if (!/^\d{16}$/.test(formData.cardNumber)) {
+    nextErrors.cardNumber = t("booking.errorCard");
+  }
+
+  if (!formData.expiryDate) {
+    nextErrors.expiryDate = t("booking.required");
+  } else if (!isFutureExpiry(formData.expiryDate)) {
+    nextErrors.expiryDate = t("booking.errorExpiry");
+  }
+
+  if (!formData.cvc) {
+    nextErrors.cvc = t("booking.required");
+  } else if (!/^\d{3}$/.test(formData.cvc)) {
+    nextErrors.cvc = t("booking.errorCvc");
+  }
+
+  if (!formData.cardName) {
+    nextErrors.cardName = t("booking.required");
+  }
+
+  setFieldErrors(nextErrors);
+
+  const hasErrors = Object.values(nextErrors).some((msg) => msg !== "");
+  if (hasErrors) return;
+
+  setShowModal(true);
+}
 
   function closeModal() {
     setShowModal(false);
@@ -186,6 +330,7 @@ export default function Booking() {
       <div className="booking-wrapper">
         <div className="booking-top-card">
           <h1>{t("booking.pickDateTime")}</h1>
+          <p className="booking-singer-name">{t(singer.nameKey)}</p>
 
           <label>
             {t("booking.selectDate")}
@@ -197,6 +342,9 @@ export default function Booking() {
               min={getTodayString()}
               required
             />
+            {fieldErrors.eventDate && (
+              <span className="field-error">{fieldErrors.eventDate}</span>
+            )}
           </label>
 
           <label>
@@ -208,9 +356,13 @@ export default function Booking() {
               required
             >
               <option value="">{t("booking.selectTimeSlot")}</option>
-              <option value="1:00 PM - 5:00 PM">{t("booking.time1")}</option>
-              <option value="6:00 PM - 10:00 PM">{t("booking.time2")}</option>
+              <option value="7:00 AM - 11:00 AM">{t("booking.time1")}</option>
+              <option value="1:00 PM - 5:00 PM">{t("booking.time2")}</option>
+              <option value="6:00 PM - 10:00 PM">{t("booking.time3")}</option>
             </select>
+            {fieldErrors.eventTime && (
+              <span className="field-error">{fieldErrors.eventTime}</span>
+            )}
           </label>
         </div>
 
@@ -228,6 +380,9 @@ export default function Booking() {
               onChange={handleChange}
               required
             />
+            {fieldErrors.firstName && (
+              <span className="field-error">{fieldErrors.firstName}</span>
+            )}
           </label>
 
           <label>
@@ -239,6 +394,9 @@ export default function Booking() {
               onChange={handleChange}
               required
             />
+            {fieldErrors.lastName && (
+              <span className="field-error">{fieldErrors.lastName}</span>
+            )}
           </label>
 
           <label>
@@ -251,6 +409,9 @@ export default function Booking() {
               inputMode="numeric"
               required
             />
+            {fieldErrors.phone && (
+              <span className="field-error">{fieldErrors.phone}</span>
+            )}
           </label>
 
           <p className="booking-small-note">{t("booking.phoneNote")}</p>
@@ -267,6 +428,9 @@ export default function Booking() {
               inputMode="numeric"
               required
             />
+            {fieldErrors.cardNumber && (
+              <span className="field-error">{fieldErrors.cardNumber}</span>
+            )}
           </label>
 
           <label>
@@ -279,6 +443,9 @@ export default function Booking() {
               onChange={handleChange}
               required
             />
+            {fieldErrors.expiryDate && (
+              <span className="field-error">{fieldErrors.expiryDate}</span>
+            )}
           </label>
 
           <label>
@@ -291,6 +458,9 @@ export default function Booking() {
               inputMode="numeric"
               required
             />
+            {fieldErrors.cvc && (
+              <span className="field-error">{fieldErrors.cvc}</span>
+            )}
           </label>
 
           <label>
@@ -302,9 +472,10 @@ export default function Booking() {
               onChange={handleChange}
               required
             />
+            {fieldErrors.cardName && (
+              <span className="field-error">{fieldErrors.cardName}</span>
+            )}
           </label>
-
-          {errorMessage && <p className="booking-error">{errorMessage}</p>}
 
           <button type="submit" className="booking-confirm-btn">
             {t("booking.confirmBooking")}

@@ -289,3 +289,11 @@
     font-size: 20px;
   }
 }
+
+.booking-singer-name {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
