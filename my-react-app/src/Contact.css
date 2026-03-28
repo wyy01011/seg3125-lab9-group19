@@ -297,3 +297,27 @@
   margin-top: -8px;
   margin-bottom: 16px;
 }
+
+.booking-top-card .contact-input {
+  width: 85%;
+  max-width: 420px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #f4f4f4;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.booking-top-card .contact-input {
+  width: 85%;
+  max-width: 420px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #f4f4f4;
+  font-size: 16px;
+  box-sizing: border-box;
+}

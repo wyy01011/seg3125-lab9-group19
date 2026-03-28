@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { singersData } from "./BrowseSingers";
 import { useTranslation } from "react-i18next";
 import "./Contact.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function getTodayString() {
   const today = new Date();
@@ -12,10 +14,14 @@ function getTodayString() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function isDateAvailable(dateString, availability) {
-  if (!dateString) return false;
+function isDateAvailable(dateValue, availability) {
+  if (!dateValue) return false;
 
-  const chosenDate = new Date(dateString + "T00:00:00");
+  const chosenDate =
+    dateValue instanceof Date
+      ? dateValue
+      : new Date(dateValue + "T00:00:00");
+
   const day = chosenDate.getDay();
 
   const isWeekend = day === 0 || day === 6;
@@ -66,7 +72,7 @@ export default function Booking() {
     expiryDate: "",
     cvc: "",
     cardName: "",
-    eventDate: "",
+    eventDate: null,
     eventTime: "",
   });
 
@@ -146,13 +152,42 @@ export default function Booking() {
     return "";
   }
 
+  function filterSingerDate(date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (date < today) return false;
+
+    return isDateAvailable(date, singer.availability);
+  }
+
   function handleChange(e) {
     const { name, value } = e.target;
-    const nextForm = { ...formData, [name]: value };
-    setFormData(nextForm);
+
+    if (name === "eventDate") {
+      if (value && !isDateAvailable(value, singer.availability)) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          eventDate: "This singer is not available on this date",
+        }));
+
+        setFormData((prev) => ({
+          ...prev,
+          eventDate: "",
+        }));
+
+        return;
+      }
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
     setFieldErrors((prev) => ({
       ...prev,
-      [name]: getSingleFieldError(name, value),
+      [name]: "",
     }));
   }
 
@@ -251,17 +286,22 @@ export default function Booking() {
 
           <label>
             {t("booking.selectDate")}
-            <input
-              type="date"
-              name="eventDate"
-              value={formData.eventDate}
-              onChange={handleChange}
-              min={getTodayString()}
+            <DatePicker
+              selected={formData.eventDate}
+              onChange={(date) => {
+                const nextForm = {
+                  ...formData,
+                  eventDate: date,
+                };
+                setFormData(nextForm);
+              }}
+              filterDate={filterSingerDate}
+              minDate={new Date()}
+              dateFormat="yyyy-MM-dd"
+              placeholderText={t("booking.selectDate")}
+              className="contact-input"
               required
             />
-            {fieldErrors.eventDate && (
-              <span style={errorStyle}>{fieldErrors.eventDate}</span>
-            )}
           </label>
 
           <label>
@@ -354,7 +394,12 @@ export default function Booking() {
             <p><strong>{t("booking.singer")}</strong> {t(singer.nameKey)}</p>
             <p><strong>{t("booking.name")}</strong> {formData.firstName} {formData.lastName}</p>
             <p><strong>{t("booking.phoneLabel")}</strong> {formData.phone}</p>
-            <p><strong>{t("booking.date")}</strong> {formData.eventDate}</p>
+            <p>
+              <strong>{t("booking.date")}</strong>{" "}
+              {formData.eventDate
+                ? formData.eventDate.toISOString().split("T")[0]
+                : ""}
+            </p>
             <p><strong>{t("booking.time")}</strong> {formData.eventTime}</p>
             <div className="booking-modal-actions">
               <button type="button" className="detail-back-btn" onClick={closeModal}>
