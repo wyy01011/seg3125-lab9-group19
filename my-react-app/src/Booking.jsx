@@ -224,7 +224,7 @@ export default function Booking() {
       firstName: formData.firstName,
       lastName: formData.lastName,
       phone: formData.phone,
-      eventDate: formData.eventDate,
+      eventDate: formData.eventDate ? formData.eventDate.toISOString().split("T")[0] : null,
       singerName: t(singer.nameKey),
       pricePerHour: singer.price
     };

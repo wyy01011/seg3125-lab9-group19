@@ -14,7 +14,7 @@ export default function Home() {
         <div className="singer-box">
           <h2>{t("home.headline")}</h2>
           <Link className="singer-button" to="/browse">
-            {t("home.bookNow")}
+            {t("home.bookNow")} 
           </Link>
         </div>
       </section>
