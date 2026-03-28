@@ -90,18 +90,6 @@ export default function Booking() {
 
   const [showModal, setShowModal] = useState(false);
 
-  const errorStyle = {
-    color: "red",
-    backgroundColor: "white",
-    padding: "2px 8px",
-    borderRadius: "4px",
-    marginTop: "4px",
-    display: "inline-block",
-    fontSize: "0.85rem",
-    fontWeight: "bold",
-    border: "1px solid red"
-  };
-
   if (!singer) {
     return (
       <div className="contact-page">
@@ -164,30 +152,16 @@ export default function Booking() {
   function handleChange(e) {
     const { name, value } = e.target;
 
-    if (name === "eventDate") {
-      if (value && !isDateAvailable(value, singer.availability)) {
-        setFieldErrors((prev) => ({
-          ...prev,
-          eventDate: "This singer is not available on this date",
-        }));
-
-        setFormData((prev) => ({
-          ...prev,
-          eventDate: "",
-        }));
-
-        return;
-      }
-    }
-
-    setFormData((prev) => ({
-      ...prev,
+    const nextForm = {
+      ...formData,
       [name]: value,
-    }));
+    };
+
+    setFormData(nextForm);
 
     setFieldErrors((prev) => ({
       ...prev,
-      [name]: "",
+      [name]: getSingleFieldError(name, value),
     }));
   }
 
@@ -293,7 +267,13 @@ export default function Booking() {
                   ...formData,
                   eventDate: date,
                 };
+
                 setFormData(nextForm);
+
+                setFieldErrors((prev) => ({
+                  ...prev,
+                  eventDate: getSingleFieldError("eventDate", date),
+                }));
               }}
               filterDate={filterSingerDate}
               minDate={new Date()}
@@ -302,6 +282,9 @@ export default function Booking() {
               className="contact-input"
               required
             />
+            {fieldErrors.eventDate && (
+              <span className="field-error">{fieldErrors.eventDate}</span>
+            )}
           </label>
 
           <label>
@@ -318,7 +301,7 @@ export default function Booking() {
               <option value="6:00 PM - 10:00 PM">{t("booking.time3")}</option>
             </select>
             {fieldErrors.eventTime && (
-              <span style={errorStyle}>{fieldErrors.eventTime}</span>
+              <span className="field-error">{fieldErrors.eventTime}</span>
             )}
           </label>
         </div>
@@ -330,19 +313,19 @@ export default function Booking() {
           <label>
             {t("booking.firstName")}
             <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
-            {fieldErrors.firstName && <span style={errorStyle}>{fieldErrors.firstName}</span>}
+            {fieldErrors.firstName && <span className="field-error">{fieldErrors.firstName}</span>}
           </label>
 
           <label>
             {t("booking.lastName")}
             <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
-            {fieldErrors.lastName && <span style={errorStyle}>{fieldErrors.lastName}</span>}
+            {fieldErrors.lastName && <span className="field-error">{fieldErrors.lastName}</span>}
           </label>
 
           <label>
             {t("booking.phone")}
             <input type="text" name="phone" value={formData.phone} onChange={handleChange} inputMode="numeric" required />
-            {fieldErrors.phone && <span style={errorStyle}>{fieldErrors.phone}</span>}
+            {fieldErrors.phone && <span className="field-error">{fieldErrors.phone}</span>}
           </label>
 
           <p className="booking-small-note">{t("booking.phoneNote")}</p>
@@ -351,25 +334,25 @@ export default function Booking() {
           <label>
             {t("booking.cardNumber")}
             <input type="text" name="cardNumber" value={formData.cardNumber} onChange={handleChange} inputMode="numeric" required />
-            {fieldErrors.cardNumber && <span style={errorStyle}>{fieldErrors.cardNumber}</span>}
+            {fieldErrors.cardNumber && <span className="field-error">{fieldErrors.cardNumber}</span>}
           </label>
 
           <label>
             {t("booking.expiryDate")}
             <input type="text" name="expiryDate" placeholder="MM/YY" value={formData.expiryDate} onChange={handleChange} required />
-            {fieldErrors.expiryDate && <span style={errorStyle}>{fieldErrors.expiryDate}</span>}
+            {fieldErrors.expiryDate && <span className="field-error">{fieldErrors.expiryDate}</span>}
           </label>
 
           <label>
             {t("booking.cvc")}
             <input type="text" name="cvc" value={formData.cvc} onChange={handleChange} inputMode="numeric" required />
-            {fieldErrors.cvc && <span style={errorStyle}>{fieldErrors.cvc}</span>}
+            {fieldErrors.cvc && <span className="field-error">{fieldErrors.cvc}</span>}
           </label>
 
           <label>
             {t("booking.cardName")}
             <input type="text" name="cardName" value={formData.cardName} onChange={handleChange} required />
-            {fieldErrors.cardName && <span style={errorStyle}>{fieldErrors.cardName}</span>}
+            {fieldErrors.cardName && <span className="field-error">{fieldErrors.cardName}</span>}
           </label>
 
           <button type="submit" className="booking-confirm-btn">
